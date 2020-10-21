@@ -24,11 +24,11 @@ class Calculator extends React.Component {
   operate({val, type,}){
     // always add num to current
     if (type === 'num') {
-      let currentNum = String(this.state.current) + val;
-      // validated number check, no multi decimal
+      // sub zero except if decimal added
+      let currentNum = (String(this.state.current) === '0' && val !== '.') ? val : String(this.state.current) + val;
       this.setState({
         total: (this.state.operator) ? this.state.total : null, //remove total if no oper
-        current: (isNaN(currentNum)) ? this.state.current : currentNum,
+        current: (isNaN(currentNum)) ? this.state.current : currentNum,  // validated number check, no multi decimal
       })
     }
 
@@ -131,24 +131,21 @@ const Buttons = (props) => {
 }
 
 
-const Screen = (props) => {
-  let {total, current, operator} = {...props.vals};
-  total = +total;
-  current = +current;
-
+const Screen = ({vals}) => {
+  let {total, current, operator} = vals;
   let screen = '';
-  if (!!total) {
+
+  if (total) {
     screen += total;
-    if (!!operator) {
+    if (operator) {
       screen += operator;
-      if (!!current) {
+      if (current) {
         screen += current;
       }
     }
   } else {
-    console.log(current)
     screen += current;
-    if (!!operator) {
+    if (operator) {
       screen += operator;
     }
   }
