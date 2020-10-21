@@ -4,16 +4,17 @@ import { add, subtract, multiply, divide } from './operations';
 const CALC_OPERATIONS = {
   '+': add,
   '-': subtract,
-  'X': multiply,
-  '/': divide,
+  '×': multiply,
+  '÷': divide,
 }
+
 
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
     this.initialState = {
       total: null,
-      new: 0,
+      current: 0,
       operator: null,
     }
     this.state = this.initialState;
@@ -21,55 +22,56 @@ class Calculator extends React.Component {
   }
 
   operate({val, type,}){
-    // always add num to new
+    // always add num to current
     if (type === 'num') {
-      let newNum = String(this.state.new) + val;
+      let currentNum = String(this.state.current) + val;
       // validated number check, no multi decimal
       this.setState({
-        new: (isNaN(newNum)) ? this.state.new : newNum,
+        total: (this.state.operator) ? this.state.total : null, //remove total if no oper
+        current: (isNaN(currentNum)) ? this.state.current : currentNum,
       })
     }
 
     if (type === 'oper') {
-      // operater after total but no new, just replaces/adds operator
-      if (!!this.state.total && !this.state.new) {
+      // operater after total but no current, just replaces/adds operator
+      if (!!this.state.total && !this.state.current) {
         this.setState({
           operator: val,
         })
       }
-      if (!!this.state.new) {
-        // oper after new but no total, pushes new to total and adds oper
+      if (!!this.state.current) {
+        // oper after current but no total, pushes current to total and adds oper
         if (!this.state.total && !this.state.operator) {
           this.setState({
-            total: this.state.new,
-            new: 0,
+            total: this.state.current,
+            current: 0,
             operator: val,
           })
         }
-        // post equal, total from before, new num before new oper -> replace tot
+        // post equal, total from before, current num before current oper -> replace tot
         if (!!this.state.total && !this.state.operator) {
           this.setState({
-            total: this.state.new,
-            new: 0,
+            total: this.state.current,
+            current: 0,
             operator: val,
           })
         }
-        // oper after new and total and oper, total from operation, new reset and oper replace
+        // oper after current and total and oper, total from operation, current reset and oper replace
         if (!!this.state.total && !!this.state.operator) {
           this.setState({
-            total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
-            new: 0,
+            total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.current),
+            current: 0,
             operator: val,
           })
         }
       }
     }
 
-    if (type === 'equals' && !!this.state.new && !!this.state.total) {
+    if (type === 'equals' && !!this.state.current && !!this.state.total) {
       if (!!this.state.operator) {
         this.setState({
-          total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
-          new: 0,
+          total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.current),
+          current: 0,
           operator: null,
         })
       } else {
@@ -90,7 +92,7 @@ class Calculator extends React.Component {
   render() {
     return (
       <div>
-        <Screen />
+        <Screen vals={this.state}/>
         <Buttons operate={this.operate}/>
       </div>
     )
@@ -111,8 +113,8 @@ const Buttons = (props) => {
     { val: 8, type: 'num'},
     { val: 9, type: 'num'},
     { val: '.', type: 'num'},
-    { val: 'X', type: 'oper'},
-    { val: '/', type: 'oper'},
+    { val: '×', type: 'oper'},
+    { val: '÷', type: 'oper'},
     { val: '+', type: 'oper'},
     { val: '-', type: 'oper'},
     { val: '=', type: 'equals'},
@@ -130,9 +132,30 @@ const Buttons = (props) => {
 
 
 const Screen = (props) => {
+  let {total, current, operator} = {...props.vals};
+  total = +total;
+  current = +current;
+
+  let screen = '';
+  if (!!total) {
+    screen += total;
+    if (!!operator) {
+      screen += operator;
+      if (!!current) {
+        screen += current;
+      }
+    }
+  } else {
+    console.log(current)
+    screen += current;
+    if (!!operator) {
+      screen += operator;
+    }
+  }
+
   return(
     <div>
-
+      {screen}
     </div>
   )
 }
