@@ -1,5 +1,5 @@
 import React from 'react';
-import { add, subtract, multiply, divide } from 'operations.js';
+import { add, subtract, multiply, divide } from './operations';
 const CALC_OPERATIONS = {
   '+': add,
   '-': subtract,
@@ -23,7 +23,7 @@ class Calculator extends React.Component {
     // always add num to new
     if (type === 'num') {
       this.setState({
-        new: this.state.new.concat(val),
+        new: parseFloat(String(this.state.new).concat(val)),
       })
     }
 
@@ -43,24 +43,38 @@ class Calculator extends React.Component {
             operator: val,
           })
         }
+        // post equal, total from before, new num before new oper -> replace tot
+        if (!!this.state.total && !this.state.operator) {
+          this.setState({
+            total: this.state.new,
+            new: 0,
+            operator: val,
+          })
+        }
         // oper after new and total and oper, total from operation, new reset and oper replace
         if (!!this.state.total && !!this.state.operator) {
           this.setState({
             total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
             new: 0,
-            oper: val,
+            operator: val,
           })
         }
       }
     }
 
     if (type === 'equals' && !!this.state.new && !!this.state.total) {
-      this.setState({
-        total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
-        new: 0,
-        operator: null,
-      })
-    }
+      if (!!this.state.operator) {
+        this.setState({
+          total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
+          new: 0,
+          operator: null,
+        })
+      } else {
+        this.setState({
+          total: null,
+        })
+      }
+    } 
 
     if (type === 'clear') {
       this.setState({
@@ -113,7 +127,9 @@ const Buttons = (props) => {
 
 const Screen = (props) => {
   return(
-    <div></div>
+    <div>
+
+    </div>
   )
 }
 
