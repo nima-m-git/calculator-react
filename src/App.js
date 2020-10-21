@@ -1,5 +1,6 @@
 import React from 'react';
 import { add, subtract, multiply, divide } from './operations';
+
 const CALC_OPERATIONS = {
   '+': add,
   '-': subtract,
@@ -23,8 +24,10 @@ class Calculator extends React.Component {
     // always add num to new
     if (type === 'num') {
       this.setState({
-        new: parseFloat(String(this.state.new).concat(val)),
+        new: String(this.state.new) + val,
       })
+
+      console.log(typeof this.state.new, val)
     }
 
     if (type === 'oper') {
@@ -107,6 +110,7 @@ const Buttons = (props) => {
     { val: 7, type: 'num'},
     { val: 8, type: 'num'},
     { val: 9, type: 'num'},
+    { val: '.', type: 'num'},
     { val: 'X', type: 'oper'},
     { val: '/', type: 'oper'},
     { val: '+', type: 'oper'},
