@@ -1,32 +1,71 @@
 import React from 'react';
 import { add, subtract, multiply, divide } from 'operations.js';
+const CALC_OPERATIONS = {
+  '+': add,
+  '-': subtract,
+  'X': multiply,
+  '/': divide,
+}
 
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.initialState = {
       total: null,
       new: 0,
-      operation: null,
+      operator: null,
     }
-    this.operate = this.operate.bind(this)
+    this.state = this.initialState;
+    this.operate = this.operate.bind(this);
   }
 
-  operate(btn){
-    if (btn.type === 'num') {
+  operate({val, type,}){
+    // always add num to new
+    if (type === 'num') {
       this.setState({
-        new: this.state.new.concat(btn.val)
+        new: this.state.new.concat(val),
       })
     }
-    if (btn.type === 'oper') {
-      if (!this.state.operation)
-      if (!this.state.total) {
+
+    if (type === 'oper') {
+      // operater after total but no new, just replaces/adds operator
+      if (!!this.state.total && !this.state.new) {
         this.setState({
-          total: this.state.new,
-          new: 0,
-          operation: btn.fnc
+          operator: val,
         })
       }
+      if (!!this.state.new) {
+        // oper after new but no total, pushes new to total and adds oper
+        if (!this.state.total && !this.state.operator) {
+          this.setState({
+            total: this.state.new,
+            new: 0,
+            operator: val,
+          })
+        }
+        // oper after new and total and oper, total from operation, new reset and oper replace
+        if (!!this.state.total && !!this.state.operator) {
+          this.setState({
+            total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
+            new: 0,
+            oper: val,
+          })
+        }
+      }
+    }
+
+    if (type === 'equals' && !!this.state.new && !!this.state.total) {
+      this.setState({
+        total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.new),
+        new: 0,
+        operator: null,
+      })
+    }
+
+    if (type === 'clear') {
+      this.setState({
+        ...this.initialState,
+      })
     }
   }
 
@@ -54,11 +93,11 @@ const Buttons = (props) => {
     { val: 7, type: 'num'},
     { val: 8, type: 'num'},
     { val: 9, type: 'num'},
-    { val: 'X', type: 'oper', fnc: multiply},
-    { val: '/', type: 'oper', fnc: divide},
-    { val: '+', type: 'oper', fnc: add},
-    { val: '-', type: 'oper', fnc: subtract},
-    { val: '=', type: 'equal'},
+    { val: 'X', type: 'oper'},
+    { val: '/', type: 'oper'},
+    { val: '+', type: 'oper'},
+    { val: '-', type: 'oper'},
+    { val: '=', type: 'equals'},
     { val: 'AC', type: 'clear'}
   ]
 
