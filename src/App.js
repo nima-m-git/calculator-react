@@ -23,11 +23,11 @@ class Calculator extends React.Component {
   operate({val, type,}){
     // always add num to new
     if (type === 'num') {
+      let newNum = String(this.state.new) + val;
+      // validated number check, no multi decimal
       this.setState({
-        new: String(this.state.new) + val,
+        new: (isNaN(newNum)) ? this.state.new : newNum,
       })
-
-      console.log(typeof this.state.new, val)
     }
 
     if (type === 'oper') {
