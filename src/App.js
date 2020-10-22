@@ -9,6 +9,88 @@ const CALC_OPERATIONS = {
 }
 
 
+const operationReducer = (state, action) => {
+  let {val, type} = action;
+
+  switch (type) {
+    case 'num':
+      let currentNum = (String(state.current) === '0' && val !== '.') ? val : String(state.current) + val; // sub zero except if decimal added
+      return {
+        ...state,
+        total: (state.operator) ? state.total : null, //remove total if no oper
+        current: (isNaN(currentNum)) ? state.current : currentNum,  // validated number check, no multi decimal
+      }
+    case 'oper':
+      // operater after total but no current, just replaces/adds operator
+      if (state.total && !state.current) {
+        return {
+          ...state,
+          operator: val,
+        }
+      } 
+      if (state.current) {
+        // oper after current but no total, pushes current to total and adds oper
+        if (!state.total && !state.operator) {
+          return {
+            ...state,
+            total: state.current,
+            current: 0,
+            operator: val,
+          }
+        // post equal, total from before, current num before current oper -> replace tot
+        } else if (state.total && !state.operator) {
+          return {
+            ...state,
+            total: state.current,
+            current: 0,
+            operator: val,
+          }
+          // oper after current and total and oper, total from operation, current reset and oper replace
+        } else if (state.total && state.operator) {
+          return {
+            ...state,
+            total: CALC_OPERATIONS[state.operator](state.total, state.current),
+            current: 0,
+            operator: val,
+          }
+        } 
+      }
+      return state
+      
+    case 'equals':
+      if (state.current && state.total) {
+        if (state.operator) {
+          return {
+            ...state,
+            total: CALC_OPERATIONS[state.operator](state.total, state.current),
+            current: 0,
+            operator: null,
+          }
+        } else {
+          return {
+            ...state,
+            total: null,
+          }
+        }
+      }
+      return {
+        state
+      }
+  
+    case 'clear': 
+      return {
+        //SUB initialState
+        total: null,
+        current: 0,
+        operator: null,
+      }
+
+    default:
+      return state;
+  }
+}
+
+
 class Calculator extends React.Component {
   constructor(props) {
     super(props);
@@ -18,74 +100,17 @@ class Calculator extends React.Component {
       operator: null,
     }
     this.state = this.initialState;
-    this.operate = this.operate.bind(this);
+    this.buttonPress = this.buttonPress.bind(this);
   }
 
-  operate({val, type,}){
-    // always add num to current
-    if (type === 'num') {
-      // sub zero except if decimal added
-      let currentNum = (String(this.state.current) === '0' && val !== '.') ? val : String(this.state.current) + val;
-      this.setState({
-        total: (this.state.operator) ? this.state.total : null, //remove total if no oper
-        current: (isNaN(currentNum)) ? this.state.current : currentNum,  // validated number check, no multi decimal
-      })
-    }
-
-    if (type === 'oper') {
-      // operater after total but no current, just replaces/adds operator
-      if (!!this.state.total && !this.state.current) {
-        this.setState({
-          operator: val,
-        })
-      }
-      if (!!this.state.current) {
-        // oper after current but no total, pushes current to total and adds oper
-        if (!this.state.total && !this.state.operator) {
-          this.setState({
-            total: this.state.current,
-            current: 0,
-            operator: val,
-          })
-        }
-        // post equal, total from before, current num before current oper -> replace tot
-        if (!!this.state.total && !this.state.operator) {
-          this.setState({
-            total: this.state.current,
-            current: 0,
-            operator: val,
-          })
-        }
-        // oper after current and total and oper, total from operation, current reset and oper replace
-        if (!!this.state.total && !!this.state.operator) {
-          this.setState({
-            total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.current),
-            current: 0,
-            operator: val,
-          })
-        }
-      }
-    }
-
-    if (type === 'equals' && !!this.state.current && !!this.state.total) {
-      if (!!this.state.operator) {
-        this.setState({
-          total: CALC_OPERATIONS[this.state.operator](this.state.total, this.state.current),
-          current: 0,
-          operator: null,
-        })
-      } else {
-        this.setState({
-          total: null,
-        })
-      }
-    } 
-
-    if (type === 'clear') {
-      this.setState({
-        ...this.initialState,
-      })
-    }
+  
+  buttonPress({val, type,}) {
+    const action = {
+      type,
+      val,
+    };
+    const newState = operationReducer(this.state, action);
+    this.setState(newState);
   }
 
 
@@ -93,7 +118,7 @@ class Calculator extends React.Component {
     return (
       <div>
         <Screen vals={this.state}/>
-        <Buttons operate={this.operate}/>
+        <Buttons operate={this.buttonPress}/>
       </div>
     )
   }
