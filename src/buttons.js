@@ -9,13 +9,13 @@ const BUTTONS = [
     { val: 7, type: 'num'},
     { val: 8, type: 'num'},
     { val: 9, type: 'num'},
-    { val: '.', type: 'num'},
-    { val: '×', type: 'oper'},
-    { val: '÷', type: 'oper'},
-    { val: '+', type: 'oper'},
-    { val: '-', type: 'oper'},
-    { val: '=', type: 'equals'},
-    { val: 'AC', type: 'clear'}
+    { val: '.', name: 'decimal', type: 'num'},
+    { val: '×', name: 'multiply', type: 'oper'},
+    { val: '÷', name: 'divide', type: 'oper'},
+    { val: '+', name: 'add', type: 'oper'},
+    { val: '-', name: 'subtract', type: 'oper'},
+    { val: '=', name: 'equals', type: 'equals'},
+    { val: 'AC', name: 'clear', type: 'clear'}
 ]
 
 export default BUTTONS

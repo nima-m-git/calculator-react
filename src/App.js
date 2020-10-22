@@ -1,20 +1,19 @@
 import React from 'react';
 import './App.scss';
 
-import { add, subtract, multiply, divide } from './operations';
+import OPERATIONS from './operations';
 import BUTTONS from './buttons';
 
-const CALC_OPERATIONS = {
-  '+': add,
-  '-': subtract,
-  '×': multiply,
-  '÷': divide,
+const OPERATOR_SYMBOLS = {
+  add: '+',
+  subtract: '-',
+  multiply: '×',
+  divide: '÷',
 }
 
 
 const operationReducer = (state, action) => {
-  let {val, type} = action;
-
+  const {val, type, name} = action;
   switch (type) {
     case 'num':
       let currentNum = (String(state.current) === '0' && val !== '.') ? val : String(state.current) + val; // sub zero except if decimal added
@@ -28,7 +27,7 @@ const operationReducer = (state, action) => {
       if (state.total && !state.current) {
         return {
           ...state,
-          operator: val,
+          operator: name,
         }
       } 
       if (state.current) {
@@ -38,7 +37,7 @@ const operationReducer = (state, action) => {
             ...state,
             total: state.current,
             current: 0,
-            operator: val,
+            operator: name,
           }
         // post equal, total from before, current num before current oper -> replace tot
         } else if (state.total && !state.operator) {
@@ -46,15 +45,15 @@ const operationReducer = (state, action) => {
             ...state,
             total: state.current,
             current: 0,
-            operator: val,
+            operator: name,
           }
           // oper after current and total and oper, total from operation, current reset and oper replace
         } else if (state.total && state.operator) {
           return {
             ...state,
-            total: CALC_OPERATIONS[state.operator](state.total, state.current),
+            total: OPERATIONS[state.operator](state.total, state.current),
             current: 0,
-            operator: val,
+            operator: name,
           }
         } 
       }
@@ -65,7 +64,7 @@ const operationReducer = (state, action) => {
         if (state.operator) {
           return {
             ...state,
-            total: CALC_OPERATIONS[state.operator](state.total, state.current),
+            total: OPERATIONS[state.operator](state.total, state.current),
             current: 0,
             operator: null,
           }
@@ -107,10 +106,11 @@ class Calculator extends React.Component {
   }
 
   
-  buttonPress({val, type,}) {
+  buttonPress({val, type, name}) {
     const action = {
       type,
       val,
+      name,
     };
     const newState = operationReducer(this.state, action);
     this.setState(newState);
@@ -119,7 +119,7 @@ class Calculator extends React.Component {
 
   render() {
     return (
-      <div class='calculator'>
+      <div className='calculator'>
         <Screen vals={this.state}/>
         <Buttons operate={this.buttonPress}/>
       </div>
@@ -132,7 +132,7 @@ const Buttons = (props) => {
   return (
     <ul className='buttons'>
       {BUTTONS.map((btn) => 
-        <li key={btn.val}>
+        <li key={btn.val} className={'btn-'+btn.val}>
           <button onClick={() => props.operate(btn)}>{btn.val}</button>
         </li>
       )}
@@ -142,13 +142,14 @@ const Buttons = (props) => {
 
 
 const Screen = ({vals}) => {
-  let {total, current, operator} = vals;
+  const {total, current, operator} = vals;
+  const operatorSymbol = OPERATOR_SYMBOLS[operator];
   let screen = '';
 
   if (total) {
     screen += total;
     if (operator) {
-      screen += operator;
+      screen += operatorSymbol;
       if (current) {
         screen += current;
       }
@@ -156,7 +157,7 @@ const Screen = ({vals}) => {
   } else {
     screen += current;
     if (operator) {
-      screen += operator;
+      screen += operatorSymbol;
     }
   }
 
