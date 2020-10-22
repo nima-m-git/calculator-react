@@ -1,5 +1,6 @@
 import React from 'react';
 import { add, subtract, multiply, divide } from './operations';
+import BUTTONS from './buttons';
 
 const CALC_OPERATIONS = {
   '+': add,
@@ -126,28 +127,8 @@ class Calculator extends React.Component {
 
 
 const Buttons = (props) => {
-  const buttons = [
-    { val: 0, type: 'num'},
-    { val: 1, type: 'num'},
-    { val: 2, type: 'num'},
-    { val: 3, type: 'num'},
-    { val: 4, type: 'num'},
-    { val: 5, type: 'num'},
-    { val: 6, type: 'num'},
-    { val: 7, type: 'num'},
-    { val: 8, type: 'num'},
-    { val: 9, type: 'num'},
-    { val: '.', type: 'num'},
-    { val: '×', type: 'oper'},
-    { val: '÷', type: 'oper'},
-    { val: '+', type: 'oper'},
-    { val: '-', type: 'oper'},
-    { val: '=', type: 'equals'},
-    { val: 'AC', type: 'clear'}
-  ]
-
   return (
-    buttons.map((btn) => 
+    BUTTONS.map((btn) => 
       <li key={btn.val}>
         <button onClick={() => props.operate(btn)}>{btn.val}</button>
       </li>
