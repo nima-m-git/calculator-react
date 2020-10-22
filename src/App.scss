@@ -1,0 +1,43 @@
+* {
+  padding: 0;
+  margin: 0;
+
+  ul {
+    list-style: none;
+  }
+}
+
+.calculator {
+  border: 1px solid black;
+  margin: 0 auto;
+  display: inline-block;
+  position: absolute;
+  top: 30%;
+  left: 30%;
+}
+
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 60px);
+  grid-template-rows: repeat(5, 50px);
+
+  button {
+    height: 100%;
+    width: 100%;
+    font-size: 20px;
+  }
+}
+
+
+.screen {
+  position: relative;
+  height: 70px;
+  font-size: 30px;
+
+  .output {
+    position: absolute;
+    right: 5px;
+    bottom: 10px;
+  }
+}

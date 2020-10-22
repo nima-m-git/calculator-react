@@ -1,4 +1,6 @@
 import React from 'react';
+import './App.scss';
+
 import { add, subtract, multiply, divide } from './operations';
 import BUTTONS from './buttons';
 
@@ -117,7 +119,7 @@ class Calculator extends React.Component {
 
   render() {
     return (
-      <div>
+      <div class='calculator'>
         <Screen vals={this.state}/>
         <Buttons operate={this.buttonPress}/>
       </div>
@@ -128,11 +130,13 @@ class Calculator extends React.Component {
 
 const Buttons = (props) => {
   return (
-    BUTTONS.map((btn) => 
-      <li key={btn.val}>
-        <button onClick={() => props.operate(btn)}>{btn.val}</button>
-      </li>
-    )
+    <ul className='buttons'>
+      {BUTTONS.map((btn) => 
+        <li key={btn.val}>
+          <button onClick={() => props.operate(btn)}>{btn.val}</button>
+        </li>
+      )}
+    </ul>
   )
 }
 
@@ -157,8 +161,10 @@ const Screen = ({vals}) => {
   }
 
   return(
-    <div>
-      {screen}
+    <div className='screen'>
+      <div className='output'>
+        {screen}
+      </div>
     </div>
   )
 }
