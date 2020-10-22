@@ -11,6 +11,7 @@ const OPERATOR_SYMBOLS = {
   subtract: '-',
   multiply: '×',
   divide: '÷',
+  power: '^',
   equals: '=',
   clear: 'AC',
 }

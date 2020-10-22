@@ -31,10 +31,10 @@
   grid-template-rows: repeat(5, 60px);
   grid-template-areas: 
     'add subtract multiply divide'
-    'seven eight nine clear'
+    'seven eight nine power'
     'four five six equals'
     'one two three equals'
-    'zero zero decimal equals'
+    'zero decimal clear equals'
     ;
 
   button {

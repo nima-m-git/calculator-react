@@ -14,6 +14,7 @@ const BUTTONS = [
     { val: '÷', name: 'divide', type: 'oper'},
     { val: '+', name: 'add', type: 'oper'},
     { val: '-', name: 'subtract', type: 'oper'},
+    { val: '^', name: 'power', type: 'oper'},
     { val: '=', name: 'equals', type: 'equals'},
     { val: 'AC', name: 'clear', type: 'clear'}
 ]
