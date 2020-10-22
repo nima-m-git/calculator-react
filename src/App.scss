@@ -8,13 +8,13 @@
 }
 
 .calculator {
-  border: 1px solid black;
-  border-radius: 5px;
+  border: 10px solid rgb(41, 43, 31);
+  border-radius: 8px;
   margin: 0 auto;
   display: inline-block;
   position: absolute;
-  top: 30%;
-  left: 30%;
+  top: 20%;
+  left: 20%;
   padding: 10px;
   background: rgb(75, 77, 56);
 }
@@ -27,8 +27,8 @@
   border-radius: 5px;
 
   display: grid;
-  grid-template-columns: repeat(4, 70px);
-  grid-template-rows: repeat(5, 60px);
+  grid-template-columns: repeat(4, minmax(40px, 80px));
+  grid-template-rows: repeat(5, minmax(30px, 70px));
   grid-template-areas: 
     'add subtract multiply divide'
     'seven eight nine power'
