@@ -9,6 +9,8 @@ const OPERATOR_SYMBOLS = {
   subtract: '-',
   multiply: '×',
   divide: '÷',
+  equals: '=',
+  clear: 'AC',
 }
 
 
@@ -132,7 +134,7 @@ const Buttons = (props) => {
   return (
     <ul className='buttons'>
       {BUTTONS.map((btn) => 
-        <li key={btn.val} className={'btn-'+btn.val}>
+        <li key={btn.val} className={'btn-' + btn.name}>
           <button onClick={() => props.operate(btn)}>{btn.val}</button>
         </li>
       )}
