@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.scss';
 
+import useFitText from 'use-fit-text';
+
 import OPERATIONS from './operations';
 import BUTTONS from './buttons';
 
@@ -144,6 +146,8 @@ const Buttons = (props) => {
 
 
 const Screen = ({vals}) => {
+  const { fontSize, ref } = useFitText();
+
   const {total, current, operator} = vals;
   const operatorSymbol = OPERATOR_SYMBOLS[operator];
   let screen = '';
@@ -165,7 +169,7 @@ const Screen = ({vals}) => {
 
   return(
     <div className='screen'>
-      <div className='output'>
+      <div className='output' ref={ref} style={{ fontSize, }}>
         {screen}
       </div>
     </div>

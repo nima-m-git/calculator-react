@@ -7,9 +7,11 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "node-sass": "^4.14.1",
+    "npm-reinstall": "^3.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "^3.4.4",
+    "use-fit-text": "^2.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,6 +35,7 @@
     ]
   },
   "devDependencies": {
+    "html-webpack-plugin": "^5.0.0-alpha.6",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.3",
     "webpack": "^5.1.3"

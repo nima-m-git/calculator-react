@@ -9,11 +9,14 @@
 
 .calculator {
   border: 1px solid black;
+  border-radius: 5px;
   margin: 0 auto;
   display: inline-block;
   position: absolute;
   top: 30%;
   left: 30%;
+  padding: 10px;
+  background: rgb(75, 77, 56);
 }
 
 
@@ -21,9 +24,11 @@
   //TODO: import btns from btns in .js, DRY & SSOT
   $btns: zero, one, two, three, four, five, six, seven, eight, nine, add, subtract, multiply, divide, equals, clear, decimal;
 
+  border-radius: 5px;
+
   display: grid;
-  grid-template-columns: repeat(4, 60px);
-  grid-template-rows: repeat(5, 50px);
+  grid-template-columns: repeat(4, 70px);
+  grid-template-rows: repeat(5, 60px);
   grid-template-areas: 
     'add subtract multiply divide'
     'seven eight nine clear'
@@ -35,12 +40,21 @@
   button {
     height: 100%;
     width: 100%;
-    font-size: 20px;
+    font-size: 24px;
+    border-radius: 10px;
+    background: linear-gradient(rgb(171, 172, 160), rgb(91, 92, 85)) ;
+    border: 3px outset rgb(93, 94, 87);
+  }
+
+  button:active {
+    transform: translate3d(0px, 3px, 1px);
+    box-shadow: 0 0 3px 3px rgba(158, 148, 148, 0.856);
   }
 
   @each $btn in $btns {
     .btn-#{$btn} {
       grid-area: $btn;
+      margin: 2px;
     }
   }
 }
@@ -49,11 +63,17 @@
 .screen {
   position: relative;
   height: 70px;
-  font-size: 30px;
+  overflow: hidden;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 10px 0;
+  background: rgb(171, 175, 129);
+  font-size: 50px;
 
   .output {
     position: absolute;
     right: 5px;
     bottom: 10px;
+    max-width: 100%;
   }
 }
